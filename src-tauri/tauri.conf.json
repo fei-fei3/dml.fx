@@ -1,0 +1,73 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:3000",
+    "distDir": "../out"
+  },
+  "package": {
+    "productName": "DML FX",
+    "version": "2.04.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": { "all": false, "open": true },
+      "process": { "relaunch": true }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Finance",
+      "copyright": "© 2025-2026 DML FX. All rights reserved.",
+      "deb": { "depends": [] },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "com.dmlfx.app",
+      "longDescription": "AI-powered FX trading journal by DML FX",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "DML FX Trading Journal",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "",
+        "wix": { "language": "en-US" }
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5REJFQkFBMkY0NjkwMkMKUldRc2tFWXZxdXZiK1NzYXhxZXN2V3hOcjIzQUtabFE2eEg0SC9hL2ZKYVEyaHJtVlVaek1meUcK%",
+      "endpoints": [
+        "https://github.com/fei-fei3/dml-fx/releases/latest/download/latest.json"
+      ]
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "height": 900,
+        "resizable": true,
+        "title": "DML FX",
+        "width": 1400,
+        "minWidth": 800,
+        "minHeight": 600
+      }
+    ]
+  }
+}
