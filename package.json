@@ -1,6 +1,6 @@
 {
   "name": "dml-fx",
-  "version": "2.05.0",
+  "version": "2.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

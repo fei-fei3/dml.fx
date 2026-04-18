@@ -1,6 +1,6 @@
 [package]
 name = "dml-fx"
-version = "2.05.0"
+version = "2.5.0"
 description = "FX Trading Journal"
 authors = ["you"]
 license = ""
