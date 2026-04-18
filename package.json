@@ -1,6 +1,6 @@
 {
-  "name": "fx-journal",
-  "version": "1.0.0",
+  "name": "dml-fx",
+  "version": "2.05.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
