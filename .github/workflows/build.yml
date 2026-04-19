@@ -66,8 +66,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+          TAURI_PRIVATE_KEY: "untrusted comment: rsign encrypted secret key\nRWRTY0Iy9NLzAatW90o7rUmv3oLPjcI2Ri/U+pb8ZjiPzFguT9kAABAAAAAAAAAAAAIAAAAANUXvlID1cQYM50Hj8ejd5z+M40mApR2ZZaxXUXwkmlNQ+HnLEx+1ftvFsDTLYU0btZFIFE94AaFKpFLVjbyBRxTO0wg+70dZZ7hr0yFOQFdmmm3Td9WZKi4suOROZ3feUgvZD0PpDwM="
+          TAURI_KEY_PASSWORD: ""
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           tagName: ${{ github.ref_name }}
