@@ -2,7 +2,7 @@ name: Build & Release Desktop Apps
 
 on:
   push:
-    tags: ['v*']  # Triggers on version tags like v2.04.0
+    tags: ['v*']
 
 jobs:
   create-release:
@@ -60,89 +60,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Prepare signing key
+        shell: bash
+        run: |
+          KEY=$(printf 'untrusted comment: rsign encrypted secret key\nRWRTY0Iy9NLzAatW90o7rUmv3oLPjcI2Ri/U+pb8ZjiPzFguT9kAABAAAAAAAAAAAAIAAAAANUXvlID1cQYM50Hj8ejd5z+M40mApR2ZZaxXUXwkmlNQ+HnLEx+1ftvFsDTLYU0btZFIFE94AaFKpFLVjbyBRxTO0wg+70dZZ7hr0yFOQFdmmm3Td9WZKi4suOROZ3feUgvZD0PpDwM=')
+          echo "TAURI_PRIVATE_KEY<<ENDOFKEY" >> $GITHUB_ENV
+          echo "$KEY" >> $GITHUB_ENV
+          echo "ENDOFKEY" >> $GITHUB_ENV
+          echo "TAURI_KEY_PASSWORD=" >> $GITHUB_ENV
+
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          TAURI_PRIVATE_KEY: "untrusted comment: rsign encrypted secret key\nRWRTY0Iy9NLzAatW90o7rUmv3oLPjcI2Ri/U+pb8ZjiPzFguT9kAABAAAAAAAAAAAAIAAAAANUXvlID1cQYM50Hj8ejd5z+M40mApR2ZZaxXUXwkmlNQ+HnLEx+1ftvFsDTLYU0btZFIFE94AaFKpFLVjbyBRxTO0wg+70dZZ7hr0yFOQFdmmm3Td9WZKi4suOROZ3feUgvZD0PpDwM="
-          TAURI_KEY_PASSWORD: ""
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           tagName: ${{ github.ref_name }}
           releaseName: DML FX ${{ github.ref_name }}
           args: --target ${{ matrix.target }}
-
-  update-json:
-    needs: [create-release, build]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate latest.json for updater
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: release } = await github.rest.repos.getRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: ${{ needs.create-release.outputs.release_id }}
-            });
-
-            const assets = release.assets;
-            const version = release.tag_name.replace('v', '');
-            const notes = release.body || `DML FX ${release.tag_name}`;
-            const pub_date = release.published_at;
-
-            const getAssetUrl = (name) => {
-              const asset = assets.find(a => a.name.includes(name));
-              return asset ? asset.browser_download_url : '';
-            };
-
-            const getSig = (name) => {
-              const asset = assets.find(a => a.name.includes(name) && a.name.endsWith('.sig'));
-              return asset ? asset.browser_download_url : '';
-            };
-
-            // Build latest.json
-            const latest = {
-              version,
-              notes,
-              pub_date,
-              platforms: {}
-            };
-
-            // macOS arm64
-            const macArmUrl = getAssetUrl('aarch64-apple-darwin') || getAssetUrl('.app.tar.gz');
-            const macArmSig = getSig('aarch64-apple-darwin') || getSig('.app.tar.gz.sig');
-            if (macArmUrl) {
-              latest.platforms['darwin-aarch64'] = { url: macArmUrl, signature: '' };
-            }
-
-            // macOS x64
-            const macX64Url = getAssetUrl('x86_64-apple-darwin');
-            if (macX64Url) {
-              latest.platforms['darwin-x86_64'] = { url: macX64Url, signature: '' };
-            }
-
-            // Windows
-            const winUrl = getAssetUrl('.msi.zip') || getAssetUrl('x86_64-pc-windows');
-            if (winUrl) {
-              latest.platforms['windows-x86_64'] = { url: winUrl, signature: '' };
-            }
-
-            // Upload latest.json as release asset
-            const content = JSON.stringify(latest, null, 2);
-            await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: ${{ needs.create-release.outputs.release_id }},
-              name: 'latest.json',
-              data: content,
-              headers: { 'content-type': 'application/json' }
-            });
-
-            console.log('Uploaded latest.json:', content);
