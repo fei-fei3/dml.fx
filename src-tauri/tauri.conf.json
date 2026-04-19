@@ -54,7 +54,7 @@
     "updater": {
       "active": true,
       "dialog": true,
-      "pubkey": RWSfBYsFIyIkvWs46WXqy3arGv50RhBZXrYwW3yCZ1tWmkMOsrSTQRqz
+      "pubkey": "RWSfBYsFIyIkvWs46WXqy3arGv50RhBZXrYwW3yCZ1tWmkMOsrSTQRqz",
       "endpoints": [
         "https://github.com/fei-fei3/dml.fx/releases/latest/download/latest.json"
       ]
